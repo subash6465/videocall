@@ -920,27 +920,6 @@ io.sockets.on("connect", async (socket) => {
   });
 
   /**
-   * Abort file sharing
-   */
-  socket.on("fileAbort", async (cfg) => {
-    // Prevent XSS injection
-    const config = checkXSS(cfg);
-    let room_id = config.room_id;
-    let peer_name = config.peer_name;
-
-    log.debug(
-      "[" +
-        socket.id +
-        "] Peer [" +
-        peer_name +
-        "] send fileAbort to room_id [" +
-        room_id +
-        "]"
-    );
-    await sendToRoom(room_id, socket.id, "fileAbort");
-  });
-
-  /**
    * Relay video player action
    */
   socket.on("videoPlayer", async (cfg) => {
@@ -986,25 +965,6 @@ io.sockets.on("connect", async (socket) => {
 
       await sendToRoom(room_id, socket.id, "videoPlayer", sendConfig);
     }
-  });
-
-  /**
-   * Whiteboard actions for all user in the same room
-   */
-  socket.on("wbCanvasToJson", async (cfg) => {
-    // Prevent XSS injection
-    const config = checkXSS(cfg);
-    // log.debug('Whiteboard send canvas', config);
-    let room_id = config.room_id;
-    await sendToRoom(room_id, socket.id, "wbCanvasToJson", config);
-  });
-
-  socket.on("whiteboardAction", async (cfg) => {
-    // Prevent XSS injection
-    const config = checkXSS(cfg);
-    log.debug("Whiteboard", config);
-    let room_id = config.room_id;
-    await sendToRoom(room_id, socket.id, "whiteboardAction", config);
   });
 
   /**
