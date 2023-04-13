@@ -21,10 +21,6 @@
   --iframe-width: 640px;
   --iframe-height: 480px;
 
-  /* whiteboard resize */
-  --wb-width: 800px;
-  --wb-height: 200px;
-
   /* my settings */
   --mySettings-select-w: 100%;
 
@@ -291,14 +287,10 @@ body {
 #shareRoomBtn,
 #audioBtn,
 #videoBtn,
-#screenShareBtn,
 #recordStreamBtn,
 #fullScreenBtn,
 #swapCameraBtn,
 #chatRoomBtn,
-#myHandBtn,
-#whiteboardBtn,
-#fileShareBtn,
 #mySettingsBtn,
 #aboutBtn,
 #leaveRoomBtn {
@@ -310,14 +302,10 @@ body {
 #shareRoomBtn:hover,
 #audioBtn:hover,
 #videoBtn:hover,
-#screenShareBtn:hover,
 #recordStreamBtn:hover,
 #fullScreenBtn:hover,
 #swapCameraBtn:hover,
 #chatRoomBtn:hover,
-#myHandBtn:hover,
-#fileShareBtn:hover,
-#whiteboardBtn:hover,
 #mySettingsBtn:hover,
 #aboutBtn:hover {
   color: #009dff;
@@ -328,37 +316,10 @@ body {
   transform: var(--btns-hover-scale);
 }
 
-button#myHandBtn {
-  color: #348424;
-}
-
-button#myHandBtn:hover {
-  color: #00ff95;
-}
-
 button#leaveRoomBtn {
   color: #ff0000;
 }
 
-button#whiteboardCleanBtn {
-  color: #ff0000;
-}
-
-button#whiteboardSaveBtn {
-  color: #188461;
-}
-
-button#whiteboardEraserBtn {
-  color: #000000;
-}
-
-button#whiteboardCloseBtn {
-  color: #00eeff;
-}
-
-button#whiteboardFsBtn {
-  color: #5acfc0;
-}
 #buttonsBar #leaveRoomBtn:hover {
   color: red;
   transform: var(--btns-hover-scale);
@@ -500,13 +461,6 @@ button#whiteboardFsBtn {
   width: var(--msger-bubble-width);
 }
 
-.left-msg .msg-caption-bubble {
-  background: var(--left-msg-bg);
-  border-bottom-left-radius: 0;
-  color: #fff;
-  width: 78%; /* caption */
-}
-
 .left-msg .msg-img {
   margin: 0px 5px 5px 0px;
 }
@@ -552,11 +506,6 @@ button#whiteboardFsBtn {
   padding: 15px;
   border-radius: 15px;
   overflow: auto;
-}
-
-.msg-caption-bubble {
-  padding: 15px;
-  border-radius: 15px;
 }
 
 .msg-info {
@@ -1474,7 +1423,6 @@ z-index
 8 peer name
 9 speech bar
 10 left buttons
-11 whiteboard
 12 chat emoji
 13 chat peers private msg
 14 chat room

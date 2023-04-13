@@ -9,10 +9,10 @@
 */
 
 /**
- * Videolify - Client component
+ * KABALI - Client component
  *
- * @link    GitHub: https://github.com/jaideep25/videolify
- * @link    Official Live demo: https://videolify.up.railway.app
+ * @link    GitHub: https://github.com/jaideep25/KABALI
+ * @link    Official Live demo: https://KABALI.up.railway.app
  * @license For open source use: AGPLv3
  * @author  Jaideep25 <jaideepch@outlook.com>
  * @version 1.3
@@ -100,7 +100,6 @@ const className = {
   chatOff: "fas fa-comment-slash",
   ghost: "fas fa-ghost",
   undo: "fas fa-undo",
-  captionOn: "fas fa-closed-captioning",
   trash: "fas fa-trash",
   copy: "fas fa-copy",
   heart: "fas fa-heart",
@@ -112,26 +111,19 @@ const myRoomUrl = window.location.href;
 // Local Storage class
 const lS = new LocalStorage();
 
-// Show desired buttons captionBtn, showSwapCameraBtn, showScreenShareBtn, showFullScreenBtn -> (auto-detected)
+// Show desired buttons showSwapCameraBtn, showFullScreenBtn -> (auto-detected)
 const buttons = {
   main: {
     showShareRoomBtn: true,
     showAudioBtn: true,
     showVideoBtn: true,
-    showScreenBtn: true,
-    showRecordStreamBtn: true,
     showChatRoomBtn: true,
-    showCaptionRoomBtn: true,
-    showMyHandBtn: true,
-    showWhiteboardBtn: true,
-    showFileShareBtn: true,
     showMySettingsBtn: true,
     showAboutBtn: true, // Please keep me always true, Thank you!
   },
   chat: {
     showSaveMessageBtn: true,
     showMarkDownBtn: true,
-    showFileShareBtn: true,
     showShareVideoAudioBtn: true,
     showParticipantsBtn: true,
   },
@@ -150,7 +142,6 @@ const buttons = {
     videoBtnClickAllowed: true,
     showKickOutBtn: true,
     showSnapShotBtn: true,
-    showFileShareBtn: true,
     showShareVideoAudioBtn: true,
     showPrivateMessageBtn: true,
     showZoomInOutBtn: true,
@@ -212,7 +203,7 @@ let callStartTime;
 let callElapsedTime;
 let recStartTime;
 let recElapsedTime;
-let videolifyTheme = "neon"; // neon - dark - forest - ghost ...
+let KABALITheme = "neon"; // neon - dark - forest - ghost ...
 let BtnsBar = "vertical"; // vertical - horizontal
 let pinVideoPositionSelect;
 let swalBackground = "rgba(0, 0, 0)"; // black - #16171b - transparent ...
@@ -229,7 +220,6 @@ let isEnumerateAudioDevices = false;
 let camera = "user"; // user = front-facing camera on a smartphone. | environment = the back camera on a smartphone.
 let roomLocked = false;
 let myVideoChange = false;
-let myHandStatus = false;
 let myVideoStatus = false;
 let myAudioStatus = false;
 let myScreenStatus = false;
@@ -243,7 +233,6 @@ let isAudioPitchBar = true;
 let isScreenStreaming = false;
 let showChatOnMessage = true;
 let isChatRoomVisible = false;
-let isCaptionBoxVisible = false;
 let isChatEmojiVisible = false;
 let isChatMarkdownOn = false;
 let isButtonsVisible = false;
@@ -251,7 +240,6 @@ let isButtonsBarOver = false;
 let isMySettingsVisible = false;
 let isVideoOnFullScreen = false;
 let isDocumentOnFullScreen = false;
-let isWhiteboardFs = false;
 let isVideoUrlPlayerOpen = false;
 let isVideoPinned = false;
 let pinnedVideoPlayerId = null;
@@ -267,7 +255,6 @@ let remoteMediaControls = false; // enable - disable peers video player controls
 let peerConnection = null; // RTCPeerConnection
 let peerConnections = {}; // keep track of our peer connections, indexed by peer_id == socket.io id
 let chatDataChannels = {}; // keep track of our peer chat data channels
-let fileDataChannels = {}; // keep track of our peer file sharing data channels
 let peerMediaElements = {}; // keep track of our peer <video> tags, indexed by peer_id
 let chatMessages = []; // collect chat messages to save it later if want
 let allPeers = {}; // keep track of all peers in the room, indexed by peer_id == socket.io id
@@ -277,7 +264,6 @@ let countTime; // conference count time
 // init audio-video
 let initAudioBtn;
 let initVideoBtn;
-let initScreenShareBtn;
 // init Devices select
 let initVideo;
 let initVideoSelect;
@@ -290,14 +276,8 @@ let hideMeBtn;
 let audioBtn;
 let videoBtn;
 let swapCameraBtn;
-let screenShareBtn;
-let recordStreamBtn;
 let fullScreenBtn;
 let chatRoomBtn;
-let captionBtn;
-let myHandBtn;
-let whiteboardBtn;
-let fileShareBtn;
 let mySettingsBtn;
 let aboutBtn;
 let leaveRoomBtn;
@@ -317,13 +297,6 @@ let msgerCleanTextBtn;
 let msgerPasteBtn;
 let msgerShowChatOnMsg;
 let msgerSendBtn;
-//caption section
-let captionDraggable;
-let captionHeader;
-let captionClean;
-let captionSaveBtn;
-let captionClose;
-let captionChat;
 // chat room connected peers
 let msgerCP;
 let msgerCPHeader;
@@ -364,42 +337,11 @@ let myVideoWrap;
 let myVideoAvatarImage;
 // name && hand video audio status
 let myVideoParagraph;
-let myHandStatusIcon;
 let myVideoStatusIcon;
 let myAudioStatusIcon;
 // record Media Stream
 let mediaRecorder;
 let recordedBlobs;
-let isStreamRecording = false;
-// whiteboard init
-let whiteboard;
-let whiteboardHeader;
-let wbDrawingColorEl;
-let whiteboardGhostButton;
-let wbBackgroundColorEl;
-let whiteboardPencilBtn;
-let whiteboardObjectBtn;
-let whiteboardUndoBtn;
-let whiteboardRedoBtn;
-let whiteboardImgFileBtn;
-let whiteboardImgUrlBtn;
-let whiteboardTextBtn;
-let whiteboardLineBtn;
-let whiteboardRectBtn;
-let whiteboardTriangleBtn;
-let whiteboardCircleBtn;
-let whiteboardSaveBtn;
-let whiteboardEraserBtn;
-let whiteboardCleanBtn;
-let whiteboardCloseBtn;
-// whiteboard settings
-let wbCanvas = null;
-let wbIsDrawing = false;
-let wbIsOpen = false;
-let wbIsRedoing = false;
-let wbIsEraser = false;
-let wbIsBgTransparent = false;
-let wbPop = [];
 // room actions btns
 let muteEveryoneBtn;
 let hideEveryoneBtn;
@@ -448,8 +390,6 @@ let speechRecognitionStop;
  */
 function getHtmlElementsById() {
   countTime = getId("countTime");
-  // init buttons
-  initScreenShareBtn = getId("initScreenShareBtn");
   // Init devices select
   initVideo = getId("initVideo");
   initVideoSelect = getId("initVideoSelect");
@@ -466,14 +406,8 @@ function getHtmlElementsById() {
   audioBtn = getId("audioBtn");
   videoBtn = getId("videoBtn");
   swapCameraBtn = getId("swapCameraBtn");
-  screenShareBtn = getId("screenShareBtn");
-  recordStreamBtn = getId("recordStreamBtn");
   fullScreenBtn = getId("fullScreenBtn");
-  captionBtn = getId("captionBtn");
   chatRoomBtn = getId("chatRoomBtn");
-  whiteboardBtn = getId("whiteboardBtn");
-  fileShareBtn = getId("fileShareBtn");
-  myHandBtn = getId("myHandBtn");
   mySettingsBtn = getId("mySettingsBtn");
   aboutBtn = getId("aboutBtn");
   leaveRoomBtn = getId("leaveRoomBtn");
@@ -500,13 +434,6 @@ function getHtmlElementsById() {
   msgerCPList = getId("msgerCPList");
   // chat room emoji picker
   msgerEmojiPicker = getId("msgerEmojiPicker");
-  //caption box elements
-  captionDraggable = getId("captionDraggable");
-  captionHeader = getId("captionHeader");
-  captionClean = getId("captionClean");
-  captionSaveBtn = getId("captionSaveBtn");
-  captionClose = getId("captionClose");
-  captionChat = getId("captionChat");
   // my settings
   mySettings = getId("mySettings");
   mySettingsHeader = getId("mySettingsHeader");
@@ -527,7 +454,7 @@ function getHtmlElementsById() {
   videoQualitySelect = getId("videoQuality");
   videoFpsSelect = getId("videoFps");
   screenFpsSelect = getId("screenFps");
-  themeSelect = getId("videolifyTheme");
+  themeSelect = getId("KABALITheme");
   videoObjFitSelect = getId("videoObjFitSelect");
   pinVideoPositionSelect = getId("pinVideoPositionSelect");
   btnsBarSelect = getId("BtnsBar");
@@ -535,30 +462,8 @@ function getHtmlElementsById() {
   tabRoomSecurity = getId("tabRoomSecurity");
   // my conference name, hand, video - audio status
   myVideoParagraph = getId("myVideoParagraph");
-  myHandStatusIcon = getId("myHandStatusIcon");
   myVideoStatusIcon = getId("myVideoStatusIcon");
   myAudioStatusIcon = getId("myAudioStatusIcon");
-  // my whiteboard
-  whiteboard = getId("whiteboard");
-  whiteboardHeader = getId("whiteboardHeader");
-  wbDrawingColorEl = getId("wbDrawingColorEl");
-  whiteboardGhostButton = getId("whiteboardGhostButton");
-  wbBackgroundColorEl = getId("wbBackgroundColorEl");
-  whiteboardPencilBtn = getId("whiteboardPencilBtn");
-  whiteboardObjectBtn = getId("whiteboardObjectBtn");
-  whiteboardUndoBtn = getId("whiteboardUndoBtn");
-  whiteboardRedoBtn = getId("whiteboardRedoBtn");
-  whiteboardImgFileBtn = getId("whiteboardImgFileBtn");
-  whiteboardImgUrlBtn = getId("whiteboardImgUrlBtn");
-  whiteboardTextBtn = getId("whiteboardTextBtn");
-  whiteboardLineBtn = getId("whiteboardLineBtn");
-  whiteboardRectBtn = getId("whiteboardRectBtn");
-  whiteboardTriangleBtn = getId("whiteboardTriangleBtn");
-  whiteboardCircleBtn = getId("whiteboardCircleBtn");
-  whiteboardSaveBtn = getId("whiteboardSaveBtn");
-  whiteboardEraserBtn = getId("whiteboardEraserBtn");
-  whiteboardCleanBtn = getId("whiteboardCleanBtn");
-  whiteboardCloseBtn = getId("whiteboardCloseBtn");
   // room actions buttons
   muteEveryoneBtn = getId("muteEveryoneBtn");
   hideEveryoneBtn = getId("hideEveryoneBtn");
@@ -598,21 +503,13 @@ function getHtmlElementsById() {
 function setButtonsToolTip() {
   // not needed for mobile
   if (isMobileDevice) return;
-  // init buttons
-  setTippy(initScreenShareBtn, "Toggle screen sharing", "top");
   // main buttons
   setTippy(shareRoomBtn, "Invite people to join", "right-start");
   setTippy(hideMeBtn, "Hide me", "right-start");
   setTippy(audioBtn, "Pause the audio", "right-start");
   setTippy(videoBtn, "Pause the video", "right-start");
-  setTippy(screenShareBtn, "Start screen sharing", "right-start");
-  setTippy(recordStreamBtn, "Start recording", "right-start");
   setTippy(fullScreenBtn, "View full screen", "right-start");
   setTippy(chatRoomBtn, "Open Chats", "right-start");
-  setTippy(captionBtn, "Open Captions", "right-start");
-  setTippy(myHandBtn, "Raise hand", "right-start");
-  setTippy(whiteboardBtn, "Open whiteboard", "right-start");
-  setTippy(fileShareBtn, "Share file", "right-start");
   setTippy(mySettingsBtn, "Settings", "right-start");
   setTippy(aboutBtn, "About", "right-start");
   setTippy(leaveRoomBtn, "Leave this room", "right-start");
@@ -630,10 +527,6 @@ function setButtonsToolTip() {
   setTippy(msgerSendBtn, "Send", "top");
   // chat participants buttons
   setTippy(msgerCPCloseBtn, "Close", "left");
-  // caption buttons
-  setTippy(captionClose, "Close", "right");
-  setTippy(captionClean, "Clean messages", "top");
-  setTippy(captionSaveBtn, "Save messages", "top");
   // settings
   setTippy(mySettingsCloseBtn, "Close", "right");
   setTippy(myPeerNameSetBtn, "Change name", "top");
@@ -649,25 +542,6 @@ function setButtonsToolTip() {
   setTippy(tabRoomBtn, "Room", "top");
   setTippy(tabStylingBtn, "Styling", "top");
   setTippy(tabLanguagesBtn, "Languages", "top");
-  // whiteboard btns
-  setTippy(wbDrawingColorEl, "Pen color", "bottom");
-  setTippy(whiteboardGhostButton, "Toggle transparent background", "bottom");
-  setTippy(wbBackgroundColorEl, "BG color", "bottom");
-  setTippy(whiteboardPencilBtn, "Pen", "bottom");
-  setTippy(whiteboardObjectBtn, "Sniper", "bottom");
-  setTippy(whiteboardUndoBtn, "Undo ↶", "bottom");
-  setTippy(whiteboardRedoBtn, "Redo ↷", "bottom");
-  setTippy(whiteboardImgFileBtn, "Insert image from file", "bottom");
-  setTippy(whiteboardImgUrlBtn, "Insert image from URL", "bottom");
-  setTippy(whiteboardTextBtn, "Insert text", "bottom");
-  setTippy(whiteboardLineBtn, "Insert line", "bottom");
-  setTippy(whiteboardRectBtn, "Insert rectangle", "bottom");
-  setTippy(whiteboardTriangleBtn, "Insert triangle", "bottom");
-  setTippy(whiteboardCircleBtn, "Insert circle", "bottom");
-  setTippy(whiteboardSaveBtn, "Download the board", "bottom");
-  setTippy(whiteboardEraserBtn, "Remove object", "bottom");
-  setTippy(whiteboardCleanBtn, "Clear the board", "bottom");
-  setTippy(whiteboardCloseBtn, "Close the board", "bottom");
   // room actions btn
   // setTippy(muteEveryoneBtn, 'Mute everyone except yourself', 'top');
   // setTippy(hideEveryoneBtn, 'Hide everyone except yourself', 'top');
@@ -887,7 +761,6 @@ function initClientPeer() {
   signalingSocket.on("peerStatus", handlePeerStatus);
   signalingSocket.on("peerAction", handlePeerAction);
   signalingSocket.on("wbCanvasToJson", handleJsonToWbCanvas);
-  signalingSocket.on("whiteboardAction", handleWhiteboardAction);
   signalingSocket.on("kickOut", handleKickedOut);
   signalingSocket.on("fileInfo", handleFileInfo);
   signalingSocket.on("fileAbort", handleFileAbort);
@@ -1035,18 +908,12 @@ function handleButtonsRule() {
   elemDisplay(audioBtn, buttons.main.showAudioBtn);
   elemDisplay(videoBtn, buttons.main.showVideoBtn);
   //elemDisplay(screenShareBtn, buttons.main.showScreenBtn); // auto-detected
-  elemDisplay(recordStreamBtn, buttons.main.showRecordStreamBtn);
   elemDisplay(chatRoomBtn, buttons.main.showChatRoomBtn);
-  //elemDisplay(captionBtn, buttons.main.showCaptionRoomBtn); // auto-detected
-  elemDisplay(myHandBtn, buttons.main.showMyHandBtn);
-  elemDisplay(whiteboardBtn, buttons.main.showWhiteboardBtn);
-  elemDisplay(fileShareBtn, buttons.main.showFileShareBtn);
   elemDisplay(mySettingsBtn, buttons.main.showMySettingsBtn);
   elemDisplay(aboutBtn, buttons.main.showAboutBtn);
   // chat
   elemDisplay(msgerSaveBtn, buttons.chat.showSaveMessageBtn);
   elemDisplay(msgerMarkdownBtn, buttons.chat.showMarkDownBtn);
-  elemDisplay(msgerShareFileBtn, buttons.chat.showFileShareBtn);
   elemDisplay(msgerVideoUrlBtn, buttons.chat.showShareVideoAudioBtn);
   elemDisplay(msgerCPBtn, buttons.chat.showParticipantsBtn);
   // Settings
@@ -1086,7 +953,7 @@ async function whoAreYou() {
     allowOutsideClick: false,
     allowEscapeKey: false,
     background: "radial-gradient(#393939, #000000)",
-    title: "Videolify 😉",
+    title: "KABALI 😉",
     position: "center",
     input: "text",
     inputPlaceholder: "Enter your name",
@@ -1293,7 +1160,7 @@ async function whoAreYouJoin() {
   setPeerAvatarImgName("myVideoAvatarImage", myPeerName, useAvatarApi);
   setPeerChatAvatarImgName("right", myPeerName);
   joinToChannel();
-  setTheme(videolifyTheme);
+  setTheme(KABALITheme);
 }
 
 /**
@@ -1313,7 +1180,6 @@ async function joinToChannel() {
     peer_video_status: myVideoStatus,
     peer_audio_status: myAudioStatus,
     peer_screen_status: myScreenStatus,
-    peer_hand_status: myHandStatus,
     peer_rec_status: isRecScreenStream,
     peer_privacy_status: isVideoPrivacyActive,
   });
@@ -1492,7 +1358,7 @@ async function handleRTCDataChannels(peer_id) {
     console.log("handleRTCDataChannels " + peer_id, event);
     event.channel.onmessage = (msg) => {
       switch (event.channel.label) {
-        case "videolify_chat_channel":
+        case "KABALI_chat_channel":
           try {
             let dataMessage = JSON.parse(msg.data);
             switch (dataMessage.type) {
@@ -1507,15 +1373,15 @@ async function handleRTCDataChannels(peer_id) {
                 break;
             }
           } catch (err) {
-            console.error("videolify_chat_channel", err);
+            console.error("KABALI_chat_channel", err);
           }
           break;
-        case "videolify_file_sharing_channel":
+        case "KABALI_file_sharing_channel":
           try {
             let dataFile = msg.data;
             handleDataChannelFileSharing(dataFile);
           } catch (err) {
-            console.error("videolify_file_sharing_channel", err);
+            console.error("KABALI_file_sharing_channel", err);
           }
           break;
       }
@@ -1703,14 +1569,14 @@ function handleRemovePeer(config) {
 }
 
 /**
- * Set videolify theme | dark | grey | ...
+ * Set KABALI theme | dark | grey | ...
  * @param {string} theme type
  */
 function setTheme(theme) {
   if (!theme) return;
 
-  videolifyTheme = theme;
-  switch (videolifyTheme) {
+  KABALITheme = theme;
+  switch (KABALITheme) {
     case "neon":
       // neon theme
       swalBackground = "rgba(0, 0, 0)";
@@ -2109,7 +1975,6 @@ async function loadLocalMedia(stream) {
   const myVideoNavBar = document.createElement("div");
   const myCountTime = document.createElement("button");
   const myPeerName = document.createElement("p");
-  const myHandStatusIcon = document.createElement("button");
   const myVideoToImgBtn = document.createElement("button");
   const myPrivacyBtn = document.createElement("button");
   const myVideoStatusIcon = document.createElement("button");
@@ -2128,11 +1993,6 @@ async function loadLocalMedia(stream) {
   // my peer name
   myPeerName.setAttribute("id", "myVideoParagraph");
   myPeerName.className = "videoPeerName";
-
-  // my hand status element
-  myHandStatusIcon.setAttribute("id", "myHandStatusIcon");
-  myHandStatusIcon.className = className.handPulsate;
-  myHandStatusIcon.style.setProperty("color", "rgb(0, 255, 0)");
 
   // my privacy button
   myPrivacyBtn.setAttribute("id", "myPrivacyBtn");
@@ -2167,7 +2027,6 @@ async function loadLocalMedia(stream) {
   // no mobile devices
   setTippy(myCountTime, "Session Time", "bottom");
   setTippy(myPeerName, "My name", "bottom");
-  setTippy(myHandStatusIcon, "My hand is raised", "bottom");
   setTippy(myPrivacyBtn, "Toggle video privacy", "bottom");
   setTippy(myVideoStatusIcon, "My video is on", "bottom");
   setTippy(myAudioStatusIcon, "You're unmuted", "bottom");
@@ -2215,13 +2074,9 @@ async function loadLocalMedia(stream) {
 
   myVideoNavBar.appendChild(myVideoStatusIcon);
   myVideoNavBar.appendChild(myAudioStatusIcon);
-  myVideoNavBar.appendChild(myHandStatusIcon);
 
   // add my pitchBar
   myPitchMeter.appendChild(myPitchBar);
-
-  // hand display none on default menad is raised == false
-  myHandStatusIcon.style.display = "none";
 
   myLocalMedia.setAttribute("id", "myVideo");
   myLocalMedia.setAttribute("playsinline", true);
@@ -2294,36 +2149,6 @@ async function loadLocalMedia(stream) {
 }
 
 /**
- * Check if screen is shared on join room
- */
-function checkShareScreen() {
-  if (!isMobileDevice && isScreenEnabled && isScreenSharingSupported) {
-    playSound("newMessage");
-    // screenShareBtn.click(); // Chrome - Opera - Edge - Brave
-    // handle error: getDisplayMedia requires transient activation from a user gesture on Safari - FireFox
-    Swal.fire({
-      background: swalBackground,
-      position: "center",
-      icon: "question",
-      text: "Do you want to share your screen?",
-      showDenyButton: true,
-      confirmButtonText: `Yes`,
-      denyButtonText: `No`,
-      showClass: {
-        popup: "animate__animated animate__fadeInDown",
-      },
-      hideClass: {
-        popup: "animate__animated animate__fadeOutUp",
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        screenShareBtn.click();
-      }
-    });
-  }
-}
-
-/**
  * Load Remote Media Stream obj
  * @param {object} stream media stream audio - video
  * @param {object} peers all peers info connected to the same room
@@ -2358,7 +2183,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
   const remoteVideoStatusIcon = document.createElement("button");
   const remoteAudioStatusIcon = document.createElement("button");
   const remoteVideoAudioUrlBtn = document.createElement("button");
-  const remoteFileShareBtn = document.createElement("button");
   const remotePrivateMsgBtn = document.createElement("button");
   const remotePeerKickOut = document.createElement("button");
   const remoteVideoToImgBtn = document.createElement("button");
@@ -2402,10 +2226,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
   remotePrivateMsgBtn.setAttribute("id", peer_id + "_privateMsg");
   remotePrivateMsgBtn.className = className.msgPrivate;
 
-  // remote share file
-  remoteFileShareBtn.setAttribute("id", peer_id + "_shareFile");
-  remoteFileShareBtn.className = className.shareFile;
-
   // remote peer YouTube video
   remoteVideoAudioUrlBtn.setAttribute("id", peer_id + "_videoAudioUrl");
   remoteVideoAudioUrlBtn.className = className.shareVideoAudio;
@@ -2434,13 +2254,11 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
 
   // no mobile devices
   setTippy(remotePeerName, "Participant name", "bottom");
-  setTippy(remoteHandStatusIcon, "Participant hand is raised", "bottom");
   setTippy(remoteVideoStatusIcon, "Participant video is on", "bottom");
   setTippy(remoteAudioStatusIcon, "Participant is unmuted", "bottom");
   setTippy(remoteAudioVolume, "🔊 Volume", "top-end");
   setTippy(remoteVideoAudioUrlBtn, "Send Video/Audio", "bottom");
   setTippy(remotePrivateMsgBtn, "Send a DM", "bottom");
-  setTippy(remoteFileShareBtn, "Send file", "bottom");
   setTippy(remoteVideoToImgBtn, "Take a snapshot", "bottom");
   setTippy(remotePeerKickOut, "Kick out", "bottom");
   setTippy(remoteVideoFullScreenBtn, "Full screen mode", "bottom");
@@ -2493,9 +2311,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
 
   if (buttons.remote.showPrivateMessageBtn) {
     remoteVideoNavBar.appendChild(remotePrivateMsgBtn);
-  }
-  if (buttons.remote.showFileShareBtn) {
-    remoteVideoNavBar.appendChild(remoteFileShareBtn);
   }
   if (buttons.remote.showShareVideoAudioBtn) {
     remoteVideoNavBar.appendChild(remoteVideoAudioUrlBtn);
@@ -2571,9 +2386,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
     handleVideoPlayerFs(remoteMedia.id, remoteVideoFullScreenBtn.id, peer_id);
   }
 
-  // handle file share drag and drop
-  handleFileDragAndDrop(remoteMedia.id, peer_id);
-
   if (buttons.remote.showKickOutBtn) {
     // handle kick out button event
     handlePeerKickOutBtn(peer_id);
@@ -2603,10 +2415,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
     // handle remote private messages
     handlePeerPrivateMsg(peer_id, peer_name);
   }
-  if (buttons.remote.showFileShareBtn) {
-    // handle remote send file
-    handlePeerSendFile(peer_id);
-  }
   if (buttons.remote.showShareVideoAudioBtn) {
     // handle remote video - audio URL
     handlePeerVideoAudioUrl(peer_id);
@@ -2614,8 +2422,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
 
   // show status menu
   toggleClassElements("statusMenu", "inline");
-  // notify if peer started to recording own screen + audio
-  if (peer_rec_status) notifyRecording(peer_name, "Started");
 
   // peer not has video at all
   if (!peer_video) {
@@ -3257,15 +3063,9 @@ function manageLeftButtons() {
   setAudioBtn();
   setVideoBtn();
   setSwapCameraBtn();
-  setScreenShareBtn();
-  setRecordStreamBtn();
   setFullScreenBtn();
   setChatRoomBtn();
-  setCaptionRoomBtn();
   setChatEmojiBtn();
-  setMyHandBtn();
-  setMyWhiteboardBtn();
-  setMyFileShareBtn();
   setMySettingsBtn();
   setAboutBtn();
   setLeaveRoomBtn();
@@ -3339,42 +3139,6 @@ function setSwapCameraBtn() {
       });
     } else {
       swapCameraBtn.style.display = "none";
-    }
-  });
-}
-
-/**
- * Check if i can share the screen, if yes show button else hide it
- */
-function setScreenShareBtn() {
-  if (
-    !isMobileDevice &&
-    (navigator.getDisplayMedia || navigator.mediaDevices.getDisplayMedia) &&
-    buttons.main.showScreenBtn
-  ) {
-    isScreenSharingSupported = true;
-    initScreenShareBtn.addEventListener("click", async (e) => {
-      await toggleScreenSharing(true);
-    });
-    screenShareBtn.addEventListener("click", async (e) => {
-      await toggleScreenSharing();
-    });
-  } else {
-    initScreenShareBtn.style.display = "none";
-    screenShareBtn.style.display = "none";
-    elemDisplay(getId("screenFpsDiv"), false);
-  }
-}
-
-/**
- * Start - Stop Stream recording
- */
-function setRecordStreamBtn() {
-  recordStreamBtn.addEventListener("click", (e) => {
-    if (isStreamRecording) {
-      stopStreamRecording();
-    } else {
-      startStreamRecording();
     }
   });
 }
@@ -3536,59 +3300,6 @@ function setChatRoomBtn() {
 }
 
 /**
- * Caption room buttons click event
- */
-function setCaptionRoomBtn() {
-  if (speechRecognition && buttons.main.showCaptionRoomBtn) {
-    // open hide caption
-    captionBtn.addEventListener("click", (e) => {
-      if (!isCaptionBoxVisible) {
-        showCaptionDraggable();
-      } else {
-        hideCaptionBox();
-      }
-    });
-
-    // clean caption transcripts
-    captionClean.addEventListener("click", (e) => {
-      if (transcripts.length != 0) {
-        return cleanCaptions();
-      }
-      userLog("info", "No captions to delete");
-    });
-
-    // save caption transcripts to file
-    captionSaveBtn.addEventListener("click", (e) => {
-      if (transcripts.length != 0) {
-        return downloadCaptions();
-      }
-      userLog("info", "No captions to save");
-    });
-
-    // close caption box - show left button and status menu if hide
-    captionClose.addEventListener("click", (e) => {
-      hideCaptionBox();
-      showButtonsBarAndMenu();
-    });
-
-    // hide it
-    speechRecognitionStop.style.display = "none";
-
-    // start recognition speech
-    speechRecognitionStart.addEventListener("click", (e) => {
-      startSpeech(true);
-    });
-    // stop recognition speech
-    speechRecognitionStop.addEventListener("click", (e) => {
-      startSpeech(false);
-    });
-  } else {
-    captionBtn.style.display = "none";
-    // https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API#browser_compatibility
-  }
-}
-
-/**
  * Emoji picker chat room button click event
  */
 function setChatEmojiBtn() {
@@ -3613,109 +3324,6 @@ function addEmojiToMsg(data) {
   //console.log(data);
   msgerInput.value += data.native;
   hideShowEmojiPicker();
-}
-
-/**
- * Set my hand button click event
- */
-function setMyHandBtn() {
-  myHandBtn.addEventListener("click", async (e) => {
-    setMyHandStatus();
-  });
-}
-
-/**
- * Whiteboard: https://github.com/fabricjs/fabric.js
- */
-function setMyWhiteboardBtn() {
-  dragElement(whiteboard, whiteboardHeader);
-
-  setupWhiteboard();
-
-  whiteboardBtn.addEventListener("click", (e) => {
-    handleWhiteboardToggle();
-  });
-  whiteboardPencilBtn.addEventListener("click", (e) => {
-    whiteboardIsDrawingMode(true);
-  });
-  whiteboardObjectBtn.addEventListener("click", (e) => {
-    whiteboardIsDrawingMode(false);
-  });
-  whiteboardUndoBtn.addEventListener("click", (e) => {
-    whiteboardAction(getWhiteboardAction("undo"));
-  });
-  whiteboardRedoBtn.addEventListener("click", (e) => {
-    whiteboardAction(getWhiteboardAction("redo"));
-  });
-  whiteboardSaveBtn.addEventListener("click", (e) => {
-    wbCanvasSaveImg();
-  });
-  whiteboardImgFileBtn.addEventListener("click", (e) => {
-    whiteboardAddObj("imgFile");
-  });
-  whiteboardImgUrlBtn.addEventListener("click", (e) => {
-    whiteboardAddObj("imgUrl");
-  });
-  whiteboardTextBtn.addEventListener("click", (e) => {
-    whiteboardAddObj("text");
-  });
-  whiteboardLineBtn.addEventListener("click", (e) => {
-    whiteboardAddObj("line");
-  });
-  whiteboardRectBtn.addEventListener("click", (e) => {
-    whiteboardAddObj("rect");
-  });
-  whiteboardTriangleBtn.addEventListener("click", (e) => {
-    whiteboardAddObj("triangle");
-  });
-  whiteboardCircleBtn.addEventListener("click", (e) => {
-    whiteboardAddObj("circle");
-  });
-  whiteboardEraserBtn.addEventListener("click", (e) => {
-    whiteboardIsEraser(true);
-  });
-  whiteboardCleanBtn.addEventListener("click", (e) => {
-    confirmCleanBoard();
-  });
-  whiteboardCloseBtn.addEventListener("click", (e) => {
-    handleWhiteboardToggle();
-  });
-  wbDrawingColorEl.addEventListener("change", (e) => {
-    wbCanvas.freeDrawingBrush.color = wbDrawingColorEl.value;
-    whiteboardIsDrawingMode(true);
-  });
-  wbBackgroundColorEl.addEventListener("change", (e) => {
-    setWhiteboardBgColor(wbBackgroundColorEl.value);
-  });
-  whiteboardGhostButton.addEventListener("click", (e) => {
-    wbIsBgTransparent = !wbIsBgTransparent;
-    setWhiteboardBgColor(
-      wbIsBgTransparent ? "rgba(0, 0, 0, 0.100)" : wbBackgroundColorEl.value
-    );
-    //wbIsBgTransparent ? wbCanvasBackgroundColor('rgba(0, 0, 0, 0.100)'): setTheme(videolifyTheme);
-  });
-}
-
-/**
- * File Transfer button event click
- */
-function setMyFileShareBtn() {
-  // make send-receive file div draggable
-  if (!isMobileDevice) {
-    dragElement(getId("sendFileDiv"), getId("imgShareSend"));
-    dragElement(getId("receiveFileDiv"), getId("imgShareReceive"));
-  }
-
-  fileShareBtn.addEventListener("click", (e) => {
-    //window.open("https://fromsmash.com"); // for Big Data
-    selectFileToShare(myPeerId, true);
-  });
-  sendAbortBtn.addEventListener("click", (e) => {
-    abortFileTransfer();
-  });
-  receiveHideBtn.addEventListener("click", (e) => {
-    hideFileTransfer();
-  });
 }
 
 /**
@@ -4286,7 +3894,6 @@ function attachMediaStream(element, stream) {
  * Show left buttons & status
  * if buttons visible or I'm on hover do nothing return
  * if mobile and chatroom open do nothing return
- * if mobile and myCaption visible do nothing
  * if mobile and mySettings open do nothing return
  */
 function showButtonsBarAndMenu() {
@@ -4294,7 +3901,6 @@ function showButtonsBarAndMenu() {
     isButtonsBarOver ||
     isButtonsVisible ||
     (isMobileDevice && isChatRoomVisible) ||
-    (isMobileDevice && isCaptionBoxVisible) ||
     (isMobileDevice && isMySettingsVisible)
   )
     return;
@@ -4380,7 +3986,7 @@ function shareRoomMeetingURL(checkScreen = false) {
     } else if (result.isDenied) {
       let message = {
         email: "",
-        subject: "Please join our Conference using Videolify.",
+        subject: "Please join our Conference using KABALI.",
         body: "Click to join: " + myRoomUrl,
       };
       shareRoomByEmail(message);
@@ -4630,22 +4236,6 @@ async function toggleScreenSharing(init = false) {
 }
 
 /**
- * Set Screen Sharing Status
- * @param {boolean} status of screen sharing
- */
-function setScreenSharingStatus(status) {
-  initScreenShareBtn.className = status
-    ? className.screenOff
-    : className.screenOn;
-  screenShareBtn.className = status ? className.screenOff : className.screenOn;
-  setTippy(
-    screenShareBtn,
-    status ? "Stop screen sharing" : "Start screen sharing",
-    "right-start"
-  );
-}
-
-/**
  * Set myVideoStatus true
  */
 async function setMyVideoStatusTrue() {
@@ -4833,24 +4423,6 @@ async function refreshMyLocalStream(stream, localAudioTrackChange = false) {
 }
 
 /**
- * Start recording time
- */
-function startRecordingTime() {
-  recStartTime = Date.now();
-  let rc = setInterval(function printTime() {
-    if (isStreamRecording) {
-      recElapsedTime = Date.now() - recStartTime;
-      myVideoParagraph.innerHTML =
-        myPeerName +
-        "&nbsp;&nbsp; 🔴 &nbsp; REC " +
-        getTimeToString(recElapsedTime);
-      return;
-    }
-    clearInterval(rc);
-  }, 1000);
-}
-
-/**
  * Get MediaRecorder MimeTypes
  * @returns {boolean} is mimeType supported by media recorder
  */
@@ -4868,83 +4440,6 @@ function getSupportedMimeTypes() {
 }
 
 /**
- * Start Recording
- * https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/record
- * https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder
- * https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
- */
-function startStreamRecording() {
-  recordedBlobs = [];
-
-  let options = getSupportedMimeTypes();
-  console.log("MediaRecorder options supported", options);
-  options = { mimeType: options[0] }; // select the first available as mimeType
-
-  try {
-    if (isMobileDevice) {
-      // on mobile devices recording camera + audio
-      mediaRecorder = new MediaRecorder(localMediaStream, options);
-      console.log(
-        "Created MediaRecorder",
-        mediaRecorder,
-        "with options",
-        options
-      );
-      handleMediaRecorder(mediaRecorder);
-    } else {
-      // on desktop devices recording screen + audio
-      screenMaxFrameRate = parseInt(screenFpsSelect.value);
-      const constraints = {
-        video: { frameRate: { max: screenMaxFrameRate } },
-      };
-      let recScreenStreamPromise =
-        navigator.mediaDevices.getDisplayMedia(constraints);
-      recScreenStreamPromise
-        .then((screenStream) => {
-          const newStream = new MediaStream([
-            screenStream.getVideoTracks()[0],
-            localMediaStream.getAudioTracks()[0],
-          ]);
-          recScreenStream = newStream;
-          mediaRecorder = new MediaRecorder(recScreenStream, options);
-          console.log(
-            "Created MediaRecorder",
-            mediaRecorder,
-            "with options",
-            options
-          );
-          isRecScreenStream = true;
-          handleMediaRecorder(mediaRecorder);
-        })
-        .catch((err) => {
-          console.error("[Error] Unable to recording the screen + audio", err);
-          userLog("error", "Unable to recording the screen + audio " + err);
-        });
-    }
-  } catch (err) {
-    console.error("Exception while creating MediaRecorder: ", err);
-    return userLog("error", "Can't start stream recording: " + err);
-  }
-}
-
-/**
- * Notify me if someone start to recording they screen + audio
- * @param {string} from peer_name
- * @param {string} action recording action
- */
-function notifyRecording(from, action) {
-  let msg = "[ 🔴 REC ] : " + action + " to recording his own screen and audio";
-  let chatMessage = {
-    from: from,
-    to: myPeerName,
-    msg: msg,
-    privateMsg: false,
-  };
-  handleDataChannelChat(chatMessage);
-  userLog("toast", from + " " + msg);
-}
-
-/**
  * Handle Media Recorder
  * @param {object} mediaRecorder
  */
@@ -4953,26 +4448,6 @@ function handleMediaRecorder(mediaRecorder) {
   mediaRecorder.addEventListener("start", handleMediaRecorderStart);
   mediaRecorder.addEventListener("dataavailable", handleMediaRecorderData);
   mediaRecorder.addEventListener("stop", handleMediaRecorderStop);
-}
-
-/**
- * Handle Media Recorder onstart event
- * @param {object} event of media recorder
- */
-function handleMediaRecorderStart(event) {
-  playSound("recStart");
-  if (isRecScreenStream) {
-    emitPeersAction("recStart");
-    emitPeerStatus("rec", isRecScreenStream);
-  }
-  console.log("MediaRecorder started: ", event);
-  isStreamRecording = true;
-  recordStreamBtn.style.setProperty("color", "#ff4500");
-  startRecordingTime();
-  setTippy(recordStreamBtn, "Stop recording", "right-start");
-  if (isMobileDevice) {
-    swapCameraBtn.style.display = "none";
-  }
 }
 
 /**
@@ -4985,75 +4460,12 @@ function handleMediaRecorderData(event) {
 }
 
 /**
- * Handle Media Recorder onstop event
- * @param {object} event of media recorder
- */
-function handleMediaRecorderStop(event) {
-  playSound("recStop");
-  console.log("MediaRecorder stopped: ", event);
-  console.log("MediaRecorder Blobs: ", recordedBlobs);
-  myVideoParagraph.innerHTML = myPeerName + " (me)";
-  isStreamRecording = false;
-  if (isRecScreenStream) {
-    recScreenStream.getTracks().forEach((track) => {
-      if (track.kind === "video") track.stop();
-    });
-    isRecScreenStream = false;
-    emitPeersAction("recStop");
-    emitPeerStatus("rec", isRecScreenStream);
-  }
-  recordStreamBtn.style.setProperty("color", "#000");
-  downloadRecordedStream();
-  setTippy(recordStreamBtn, "Start recording", "right-start");
-  if (isMobileDevice) {
-    swapCameraBtn.style.display = "block";
-  }
-}
-
-/**
- * Stop recording
- */
-function stopStreamRecording() {
-  mediaRecorder.stop();
-}
-
-/**
- * Download recorded stream
- */
-function downloadRecordedStream() {
-  try {
-    const type = recordedBlobs[0].type.includes("mp4") ? "mp4" : "webm";
-    const blob = new Blob(recordedBlobs, { type: "video/" + type });
-    const recFileName = getDataTimeString() + "-REC." + type;
-    const currentDevice = isMobileDevice ? "MOBILE" : "PC";
-    const blobFileSize = bytesToSize(blob.size);
-
-    userLog(
-      "success-html",
-      `<div style="text-align: left;">
-                🔴 &nbsp; Recording Info: <br/>
-                <ul>
-                    <li>File: ${recFileName}</li>
-                    <li>Size: ${blobFileSize}</li>
-                </ul>
-                <br/>
-                Please wait for the video to be processed, then will be downloaded to your ${currentDevice} device.
-            </div>`
-    );
-
-    saveBlobToFile(blob, recFileName);
-  } catch (err) {
-    userLog("error", "Recording save failed: " + err);
-  }
-}
-
-/**
  * Create Chat Room Data Channel
  * @param {string} peer_id socket.id
  */
 function createChatDataChannel(peer_id) {
   chatDataChannels[peer_id] = peerConnections[peer_id].createDataChannel(
-    "videolify_chat_channel"
+    "KABALI_chat_channel"
   );
   chatDataChannels[peer_id].onopen = (event) => {
     console.log("chatDataChannels created", event);
@@ -5070,8 +4482,6 @@ function setChatRoomAndCaptionForMobile() {
   } else {
     // make chat room draggable for desktop
     dragElement(msgerDraggable, msgerHeader);
-    // make caption draggable for desktop
-    dragElement(captionDraggable, captionHeader);
   }
 }
 
@@ -5090,23 +4500,6 @@ function showChatRoomDraggable() {
   msgerDraggable.style.display = "flex";
   isChatRoomVisible = true;
   setTippy(chatRoomBtn, "Close Chats", "right-start");
-}
-
-/**
- * Show caption box draggable on center screen position
- */
-function showCaptionDraggable() {
-  playSound("newMessage");
-  if (isMobileDevice) {
-    buttonsBar.style.display = "none";
-    isButtonsVisible = false;
-  }
-  captionBtn.className = "fas fa-closed-captioning";
-  captionDraggable.style.top = "50%";
-  captionDraggable.style.left = isMobileDevice ? "50" : "75%";
-  captionDraggable.style.display = "flex";
-  isCaptionBoxVisible = true;
-  setTippy(captionBtn, "Close Captions", "right-start");
 }
 
 /**
@@ -5144,40 +4537,6 @@ function cleanMessages() {
 }
 
 /**
- * Clean captions
- */
-function cleanCaptions() {
-  playSound("newMessage");
-  Swal.fire({
-    background: swalBackground,
-    position: "center",
-    title: "Clean up all caption transcripts?",
-    imageUrl: deleteImg,
-    showDenyButton: true,
-    confirmButtonText: `Yes`,
-    denyButtonText: `No`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
-  }).then((result) => {
-    // clean chat messages
-    if (result.isConfirmed) {
-      let captions = captionChat.firstChild;
-      while (captions) {
-        captionChat.removeChild(captions);
-        captions = captionChat.firstChild;
-      }
-      // clean object
-      transcripts = [];
-      playSound("delete");
-    }
-  });
-}
-
-/**
  * Hide chat room and emoji picker
  */
 function hideChatRoomAndEmojiPicker() {
@@ -5188,16 +4547,6 @@ function hideChatRoomAndEmojiPicker() {
   isChatRoomVisible = false;
   isChatEmojiVisible = false;
   setTippy(chatRoomBtn, "Open Chats", "right-start");
-}
-
-/**
- * Hide chat room and emoji picker
- */
-function hideCaptionBox() {
-  captionDraggable.style.display = "none";
-  captionBtn.className = className.captionOn;
-  isCaptionBoxVisible = false;
-  setTippy(captionBtn, "Open Captions", "right-start");
 }
 
 /**
@@ -5307,28 +4656,8 @@ function handleSpeechTranscript(config) {
 
   console.log("Handle speech transcript", config);
 
-  if (!isCaptionBoxVisible) showCaptionDraggable();
-
-  const msgHTML = `
-	<div class="msg left-msg">
-		<div class="msg-img" style="background-image: url('${avatar_image}')"></div>
-		<div class="msg-caption-bubble">
-            <div class="msg-info">
-                <div class="msg-info-name">${name} : ${time_stamp}</div>
-            </div>
-            <div class="msg-text">${transcipt}</div>
-        </div>
-	</div>
-    `;
-  captionChat.insertAdjacentHTML("beforeend", msgHTML);
-  captionChat.scrollTop += 500;
-  transcripts.push({
-    time: time_stamp,
-    name: name,
-    caption: transcipt,
-  });
+  };
   playSound("speech");
-}
 
 /**
  * Escape Special Chars
@@ -5764,22 +5093,6 @@ function downloadChatMsgs() {
 }
 
 /**
- * Download Captions in json format
- * https://developer.mozilla.org/it/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
- */
-function downloadCaptions() {
-  let a = document.createElement("a");
-  a.href =
-    "data:text/json;charset=utf-8," +
-    encodeURIComponent(JSON.stringify(transcripts, null, 1));
-  a.download = getDataTimeString() + roomId + "-CAPTIONS.txt";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  playSound("download");
-}
-
-/**
  * Hide - show my settings
  */
 function hideShowMySettings() {
@@ -5918,24 +5231,6 @@ function handleHideMe(isHideMeActive) {
 }
 
 /**
- * Set my Hand Status and Icon
- */
-function setMyHandStatus() {
-  if (myHandStatus) {
-    // Raise hand
-    myHandStatus = false;
-    setTippy(myHandBtn, "Raise your hand", "right-start");
-  } else {
-    // Lower hand
-    myHandStatus = true;
-    setTippy(myHandBtn, "Lower your hand", "right-start");
-    playSound("raiseHand");
-  }
-  myHandStatusIcon.style.display = myHandStatus ? "inline" : "none";
-  emitPeerStatus("hand", myHandStatus);
-}
-
-/**
  * Set My Audio Status Icon and Title
  * @param {boolean} status of my audio
  */
@@ -6012,21 +5307,6 @@ function handlePeerStatus(config) {
     case "privacy":
       setVideoPrivacyStatus(peer_id + "_video", status);
       break;
-  }
-}
-
-/**
- * Set Participant Hand Status Icon and Title
- * @param {string} peer_id socket.id
- * @param {string} peer_name peer name
- * @param {boolean} status of the hand
- */
-function setPeerHandStatus(peer_id, peer_name, status) {
-  let peerHandStatus = getId(peer_id + "_handStatus");
-  peerHandStatus.style.display = status ? "inline" : "none";
-  if (status) {
-    userLog("toast", peer_name + " has raised the hand");
-    playSound("raiseHand");
   }
 }
 
@@ -6242,12 +5522,6 @@ function handlePeerAction(config) {
       break;
     case "hideVideo":
       setMyVideoOff(peer_name);
-      break;
-    case "recStart":
-      notifyRecording(peer_name, "Started");
-      break;
-    case "recStop":
-      notifyRecording(peer_name, "Stopped");
       break;
     case "screenStart":
       handleScreenStart(peer_id);
@@ -6630,554 +5904,12 @@ function handleUnlockTheRoom() {
 }
 
 /**
- * Handle whiteboard toogle
- */
-function handleWhiteboardToggle() {
-  thereIsPeerConnections()
-    ? whiteboardAction(getWhiteboardAction("toggle"))
-    : toggleWhiteboard();
-}
-
-/**
- * Whiteboard: Show-Hide
- */
-function toggleWhiteboard() {
-  if (!wbIsOpen) playSound("newMessage");
-  whiteboard.classList.toggle("show");
-  whiteboard.style.top = "50%";
-  whiteboard.style.left = "50%";
-  wbIsOpen = wbIsOpen ? false : true;
-}
-
-/**
- * Whiteboard: setup
- */
-function setupWhiteboard() {
-  setupWhiteboardCanvas();
-  setupWhiteboardCanvasSize();
-  setupWhiteboardLocalListners();
-}
-
-/**
- * Whiteboard: setup canvas
- */
-function setupWhiteboardCanvas() {
-  wbCanvas = new fabric.Canvas("wbCanvas");
-  wbCanvas.freeDrawingBrush.color = "#000";
-  wbCanvas.freeDrawingBrush.width = 3;
-  whiteboardIsDrawingMode(true);
-}
-
-/**
- * Whiteboard: setup canvas size
- */
-function setupWhiteboardCanvasSize() {
-  let optimalSize = [wbWidth, wbHeight];
-  let scaleFactorX = window.innerWidth / optimalSize[0];
-  let scaleFactorY = window.innerHeight / optimalSize[1];
-  if (scaleFactorX < scaleFactorY && scaleFactorX < 1) {
-    wbCanvas.setWidth(optimalSize[0] * scaleFactorX);
-    wbCanvas.setHeight(optimalSize[1] * scaleFactorX);
-    wbCanvas.setZoom(scaleFactorX);
-    setWhiteboardSize(
-      optimalSize[0] * scaleFactorX,
-      optimalSize[1] * scaleFactorX
-    );
-  } else if (scaleFactorX > scaleFactorY && scaleFactorY < 1) {
-    wbCanvas.setWidth(optimalSize[0] * scaleFactorY);
-    wbCanvas.setHeight(optimalSize[1] * scaleFactorY);
-    wbCanvas.setZoom(scaleFactorY);
-    setWhiteboardSize(
-      optimalSize[0] * scaleFactorY,
-      optimalSize[1] * scaleFactorY
-    );
-  } else {
-    wbCanvas.setWidth(optimalSize[0]);
-    wbCanvas.setHeight(optimalSize[1]);
-    wbCanvas.setZoom(1);
-    setWhiteboardSize(optimalSize[0], optimalSize[1]);
-  }
-  wbCanvas.calcOffset();
-  wbCanvas.renderAll();
-}
-
-/**
- * Whiteboard: setup size
- * @param {string} w width
- * @param {string} h height
- */
-function setWhiteboardSize(w, h) {
-  document.documentElement.style.setProperty("--wb-width", w);
-  document.documentElement.style.setProperty("--wb-height", h);
-}
-
-/**
- * Set whiteboard background color
- * @param {string} color whiteboard bg
- */
-function setWhiteboardBgColor(color) {
-  let config = {
-    room_id: roomId,
-    peer_name: myPeerName,
-    action: "bgcolor",
-    color: color,
-  };
-  whiteboardAction(config);
-}
-
-/**
- * Whiteboard: drawing mode
- * @param {boolean} status of drawing mode
- */
-function whiteboardIsDrawingMode(status) {
-  wbCanvas.isDrawingMode = status;
-  if (status) {
-    setColor(whiteboardPencilBtn, "green");
-    setColor(whiteboardObjectBtn, "white");
-    setColor(whiteboardEraserBtn, "white");
-    wbIsEraser = false;
-  } else {
-    setColor(whiteboardPencilBtn, "white");
-    setColor(whiteboardObjectBtn, "green");
-  }
-}
-
-/**
- * Whiteboard: eraser
- * @param {boolean} status if eraser on
- */
-function whiteboardIsEraser(status) {
-  whiteboardIsDrawingMode(false);
-  wbIsEraser = status;
-  setColor(whiteboardEraserBtn, wbIsEraser ? "green" : "white");
-}
-
-/**
  * Set color to specific element
  * @param {object} elem element
  * @param {string} color to set
  */
 function setColor(elem, color) {
   elem.style.color = color;
-}
-
-/**
- * Whiteboard: Add object to canvas
- * @param {string} type of object to add
- */
-function whiteboardAddObj(type) {
-  switch (type) {
-    case "imgUrl":
-      Swal.fire({
-        background: swalBackground,
-        title: "Image URL",
-        input: "text",
-        showCancelButton: true,
-        confirmButtonText: "OK",
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          let wbCanvasImgURL = result.value;
-          if (isImageURL(wbCanvasImgURL)) {
-            fabric.Image.fromURL(wbCanvasImgURL, function (myImg) {
-              addWbCanvasObj(myImg);
-            });
-          } else {
-            userLog("error", "The URL is not a valid image");
-          }
-        }
-      });
-      break;
-    case "imgFile":
-      Swal.fire({
-        allowOutsideClick: false,
-        background: swalBackground,
-        position: "center",
-        title: "Select image",
-        input: "file",
-        inputAttributes: {
-          accept: wbImageInput,
-          "aria-label": "Select image",
-        },
-        showDenyButton: true,
-        confirmButtonText: `OK`,
-        denyButtonText: `Cancel`,
-        showClass: {
-          popup: "animate__animated animate__fadeInDown",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          let wbCanvasImg = result.value;
-          if (wbCanvasImg && wbCanvasImg.size > 0) {
-            let reader = new FileReader();
-            reader.onload = function (event) {
-              let imgObj = new Image();
-              imgObj.src = event.target.result;
-              imgObj.onload = function () {
-                let image = new fabric.Image(imgObj);
-                image.set({ top: 0, left: 0 }).scale(0.3);
-                addWbCanvasObj(image);
-              };
-            };
-            reader.readAsDataURL(wbCanvasImg);
-          } else {
-            userLog("error", "File not selected or empty");
-          }
-        }
-      });
-      break;
-    case "text":
-      const text = new fabric.IText("Lorem Ipsum", {
-        top: 0,
-        left: 0,
-        fontFamily: "Comfortaa",
-        fill: wbCanvas.freeDrawingBrush.color,
-        strokeWidth: wbCanvas.freeDrawingBrush.width,
-        stroke: wbCanvas.freeDrawingBrush.color,
-      });
-      addWbCanvasObj(text);
-      break;
-    case "line":
-      const line = new fabric.Line([50, 100, 200, 200], {
-        top: 0,
-        left: 0,
-        fill: wbCanvas.freeDrawingBrush.color,
-        strokeWidth: wbCanvas.freeDrawingBrush.width,
-        stroke: wbCanvas.freeDrawingBrush.color,
-      });
-      addWbCanvasObj(line);
-      break;
-    case "circle":
-      const circle = new fabric.Circle({
-        radius: 50,
-        fill: "transparent",
-        stroke: wbCanvas.freeDrawingBrush.color,
-        strokeWidth: wbCanvas.freeDrawingBrush.width,
-      });
-      addWbCanvasObj(circle);
-      break;
-    case "rect":
-      const rect = new fabric.Rect({
-        top: 0,
-        left: 0,
-        width: 150,
-        height: 100,
-        fill: "transparent",
-        stroke: wbCanvas.freeDrawingBrush.color,
-        strokeWidth: wbCanvas.freeDrawingBrush.width,
-      });
-      addWbCanvasObj(rect);
-      break;
-    case "triangle":
-      const triangle = new fabric.Triangle({
-        top: 0,
-        left: 0,
-        width: 150,
-        height: 100,
-        fill: "transparent",
-        stroke: wbCanvas.freeDrawingBrush.color,
-        strokeWidth: wbCanvas.freeDrawingBrush.width,
-      });
-      addWbCanvasObj(triangle);
-      break;
-    default:
-      break;
-  }
-}
-
-/**
- * Whiteboard: add object
- * @param {object} obj to add
- */
-function addWbCanvasObj(obj) {
-  if (obj) {
-    wbCanvas.add(obj).setActiveObject(obj);
-    whiteboardIsDrawingMode(false);
-    wbCanvasToJson();
-  }
-}
-
-/**
- * Whiteboard: Local listners
- */
-function setupWhiteboardLocalListners() {
-  wbCanvas.on("mouse:down", function (e) {
-    mouseDown(e);
-  });
-  wbCanvas.on("mouse:up", function () {
-    mouseUp();
-  });
-  wbCanvas.on("mouse:move", function () {
-    mouseMove();
-  });
-  wbCanvas.on("object:added", function () {
-    objectAdded();
-  });
-}
-
-/**
- * Whiteboard: mouse down
- * @param {object} e event
- * @returns
- */
-function mouseDown(e) {
-  wbIsDrawing = true;
-  if (wbIsEraser && e.target) {
-    wbCanvas.remove(e.target);
-    return;
-  }
-}
-
-/**
- * Whiteboard: mouse up
- */
-function mouseUp() {
-  wbIsDrawing = false;
-  wbCanvasToJson();
-}
-
-/**
- * Whiteboard: mouse move
- * @returns
- */
-function mouseMove() {
-  if (wbIsEraser) {
-    wbCanvas.hoverCursor = "not-allowed";
-    return;
-  } else {
-    wbCanvas.hoverCursor = "move";
-  }
-  if (!wbIsDrawing) return;
-}
-
-/**
- * Whiteboard: tmp objects
- */
-function objectAdded() {
-  if (!wbIsRedoing) wbPop = [];
-  wbIsRedoing = false;
-}
-
-/**
- * Whiteboard: set background color
- * @param {string} color to set
- */
-function wbCanvasBackgroundColor(color) {
-  document.documentElement.style.setProperty("--wb-bg", color);
-  wbBackgroundColorEl.value = color;
-  wbCanvas.setBackgroundColor(color);
-  wbCanvas.renderAll();
-}
-
-/**
- * Whiteboard: undo
- */
-function wbCanvasUndo() {
-  if (wbCanvas._objects.length > 0) {
-    wbPop.push(wbCanvas._objects.pop());
-    wbCanvas.renderAll();
-  }
-}
-
-/**
- * Whiteboard: redo
- */
-function wbCanvasRedo() {
-  if (wbPop.length > 0) {
-    wbIsRedoing = true;
-    wbCanvas.add(wbPop.pop());
-  }
-}
-
-/**
- * Whiteboard: save as images png
- */
-function wbCanvasSaveImg() {
-  const dataURL = wbCanvas.toDataURL({
-    width: wbCanvas.getWidth(),
-    height: wbCanvas.getHeight(),
-    left: 0,
-    top: 0,
-    format: "png",
-  });
-  const dataNow = getDataTimeString();
-  const fileName = `whiteboard-${dataNow}.png`;
-  saveDataToFile(dataURL, fileName);
-  playSound("ok");
-}
-
-/**
- * Whiteboard: save data to file
- * @param {object} dataURL to download
- * @param {string} fileName to save
- */
-function saveDataToFile(dataURL, fileName) {
-  const a = document.createElement("a");
-  a.style.display = "none";
-  a.href = dataURL;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => {
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(dataURL);
-  }, 100);
-}
-
-/**
- * Whiteboard: canvas objects to json
- */
-function wbCanvasToJson() {
-  if (thereIsPeerConnections()) {
-    let config = {
-      room_id: roomId,
-      wbCanvasJson: JSON.stringify(wbCanvas.toJSON()),
-    };
-    sendToServer("wbCanvasToJson", config);
-  }
-}
-
-/**
- * If whiteboard opened, update canvas to all peers connected
- */
-async function wbUpdate() {
-  if (wbIsOpen && thereIsPeerConnections()) wbCanvasToJson();
-}
-
-/**
- * Whiteboard: json to canvas objects
- * @param {object} config data
- */
-function handleJsonToWbCanvas(config) {
-  if (!wbIsOpen) toggleWhiteboard();
-
-  wbCanvas.loadFromJSON(config.wbCanvasJson);
-  wbCanvas.renderAll();
-}
-
-/**
- * Whiteboard: actions
- * @param {string} action whiteboard action
- * @returns {object} data
- */
-function getWhiteboardAction(action) {
-  return {
-    room_id: roomId,
-    peer_name: myPeerName,
-    action: action,
-  };
-}
-
-/**
- * Whiteboard: Clean content
- */
-function confirmCleanBoard() {
-  playSound("newMessage");
-
-  Swal.fire({
-    background: swalBackground,
-    imageUrl: deleteImg,
-    position: "center",
-    title: "Clean the board",
-    text: "Are you sure you want to clean the board?",
-    showDenyButton: true,
-    confirmButtonText: `Yes`,
-    denyButtonText: `No`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      whiteboardAction(getWhiteboardAction("clear"));
-      playSound("delete");
-    }
-  });
-}
-
-/**
- * Whiteboard: actions
- * @param {object} config data
- */
-function whiteboardAction(config) {
-  if (thereIsPeerConnections()) {
-    sendToServer("whiteboardAction", config);
-  }
-  handleWhiteboardAction(config, false);
-}
-
-/**
- * Whiteboard: handle actions
- * @param {object} config data
- * @param {boolean} logme popup action
- */
-function handleWhiteboardAction(config, logme = true) {
-  if (logme) {
-    userLog("toast", `${config.peer_name} Whiteboard action: ${config.action}`);
-  }
-  switch (config.action) {
-    case "bgcolor":
-      wbCanvasBackgroundColor(config.color);
-      break;
-    case "undo":
-      wbCanvasUndo();
-      break;
-    case "redo":
-      wbCanvasRedo();
-      break;
-    case "clear":
-      wbCanvas.clear();
-      break;
-    case "toggle":
-      toggleWhiteboard();
-      break;
-    //...
-  }
-}
-
-/**
- * Create File Sharing Data Channel
- * @param {string} peer_id socket.id
- */
-function createFileSharingDataChannel(peer_id) {
-  fileDataChannels[peer_id] = peerConnections[peer_id].createDataChannel(
-    "videolify_file_sharing_channel"
-  );
-  fileDataChannels[peer_id].binaryType = "arraybuffer";
-  fileDataChannels[peer_id].onopen = (event) => {
-    console.log("fileDataChannels created", event);
-  };
-}
-
-/**
- * Handle File Sharing
- * @param {object} data received
- */
-function handleDataChannelFileSharing(data) {
-  if (!receiveInProgress) return;
-  receiveBuffer.push(data);
-  receivedSize += data.byteLength;
-  receiveProgress.value = receivedSize;
-  receiveFilePercentage.innerHTML =
-    "Receive progress: " +
-    ((receivedSize / incomingFileInfo.file.fileSize) * 100).toFixed(2) +
-    "%";
-  if (receivedSize === incomingFileInfo.file.fileSize) {
-    receiveFileDiv.style.display = "none";
-    incomingFileData = receiveBuffer;
-    receiveBuffer = [];
-    endDownload();
-  }
 }
 
 /**
@@ -7834,7 +6566,7 @@ function handleKickedOut(config) {
 }
 
 /**
- * Videolify about info
+ * KABALI about info
  */
 function showAbout() {
   playSound("newMessage");
@@ -7842,14 +6574,14 @@ function showAbout() {
   Swal.fire({
     background: swalBackground,
     position: "center",
-    title: "<strong>Videolify Made with ❤️</strong>",
+    title: "<strong>KABALI Made with ❤️</strong>",
     imageAlt: "About",
     imageUrl: aboutImg,
     html: `
         <br/>
         <div id="about">
             <b style="color:blue">Open Source</b> project on
-            <a href="https://github.com/jaideep25/videolify" target="_blank"><br/></br>
+            <a href="https://github.com/jaideep25/KABALI" target="_blank"><br/></br>
             <img alt="Github" src="../images/github.png"></a><br/><br/>
         </div>
         </br>

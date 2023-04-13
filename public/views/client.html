@@ -37,7 +37,7 @@
 
     <!-- Title and Icon -->
 
-    <title>Videolify, Simply Clever.</title>
+    <title>KABALI, Simply Clever.</title>
     <link rel="shortcut icon" href="../images/favicon.png" />
     <link rel="apple-touch-icon" href="../images/favicon.png" />
 
@@ -49,7 +49,7 @@
 
     <meta
       name="description"
-      content="Videolify. Powerful ~ Fast ~ Easy to use ~ Secure"
+      content="KABALI. Powerful ~ Fast ~ Easy to use ~ Secure"
     />
     <meta
       name="keywords"
@@ -59,38 +59,37 @@
     <!-- https://ogp.me -->
 
     <!-- Primary Meta Tags -->
-    <title>Videolify ~ The new revolution</title>
-    <meta name="title" content="Videolify" />
+    <title>KABALI ~ The new revolution</title>
+    <meta name="title" content="KABALI" />
     <meta name="description" content="Smooth ~ Fast ~ Simply Clever!" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://videolify.up.railway.app/" />
-    <meta property="og:title" content="Videolify" />
+    <meta property="og:url" content="https://KABALI.up.railway.app/" />
+    <meta property="og:title" content="KABALI" />
     <meta property="og:description" content="Smooth ~ Fast ~ Simply Clever!" />
     <meta
       property="og:image"
-      content="https://videolify.up.railway.app/images/preview.png"
+      content="https://KABALI.up.railway.app/images/preview.png"
     />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://videolify.up.railway.app/" />
-    <meta property="twitter:title" content="Videolify" />
+    <meta property="twitter:url" content="https://KABALI.up.railway.app/" />
+    <meta property="twitter:title" content="KABALI" />
     <meta
       property="twitter:description"
       content="Smooth ~ Fast ~ Simply Clever!"
     />
     <meta
       property="twitter:image"
-      content="https://videolify.up.railway.app/images/preview.png"
+      content="https://KABALI.up.railway.app/images/preview.png"
     />
 
     <!-- StyleSheet -->
 
     <link rel="stylesheet" href="../css/client.css" />
     <link rel="stylesheet" href="../css/videoGrid.css" />
-    <link rel="stylesheet" href="../css/whiteboard.css" />
     <link rel="stylesheet" href="../css/newcall.css" />
 
     <!-- https://cdnjs.com/libraries/font-awesome -->
@@ -149,7 +148,6 @@ Please allow camera and microphone for it's full functionality.
         class="fas fa-video"
         onclick="handleVideo(event, true)"
       ></button>
-      <button id="initScreenShareBtn" class="fas fa-desktop"></button>
       <select
         id="initVideoSelect"
         class="form-select text-light bg-dark"
@@ -172,14 +170,8 @@ Please allow camera and microphone for it's full functionality.
       <button id="audioBtn" class="fas fa-microphone"></button>
       <button id="videoBtn" class="fas fa-video"></button>
       <button id="swapCameraBtn" class="fas fa-camera-rotate"></button>
-      <button id="screenShareBtn" class="fas fa-desktop"></button>
-      <button id="recordStreamBtn" class="fas fa-record-vinyl"></button>
       <button id="fullScreenBtn" class="fas fa-expand-alt"></button>
       <button id="chatRoomBtn" class="fas fa-comment"></button>
-      <button id="captionBtn" class="fas fa-closed-captioning"></button>
-      <button id="myHandBtn" class="fas fa-hand-paper"></button>
-      <button id="whiteboardBtn" class="fas fa-chalkboard-teacher"></button>
-      <button id="fileShareBtn" class="fas fa-folder-open"></button>
       <button id="mySettingsBtn" class="fas fa-cogs"></button>
       <button id="aboutBtn" class="fas fa-question"></button>
       <button id="leaveRoomBtn" class="fas fa-right-from-bracket"></button>
@@ -269,40 +261,6 @@ Please allow camera and microphone for it's full functionality.
     </section>
 
     <!-- End chat room -->
-
-    <!-- Start of caption section -->
-
-    <section id="captionDraggable" class="msger-draggable fadein">
-      <section id="caption" class="msger">
-        <header id="captionHeader" class="msger-header">
-          <div class="msger-header-title">
-            <button id="captionClose" class="fas fa-times"></button>
-          </div>
-          <div class="msger-header-options">
-            <button id="captionSaveBtn" class="fas fa-save"></button>
-            <button id="captionClean" class="fas fa-trash"></button>
-          </div>
-        </header>
-
-        <main id="captionChat" class="msger-chat"></main>
-        <div class="msger-inputarea">
-          <button
-            id="speechRecognitionIcon"
-            class="fas fa-microphone-alt"
-          ></button>
-          <select id="recognitionLanguage"></select>
-          <select id="recognitionDialect"></select>
-          <button type="button" id="speechRecognitionStart">
-            <i class="fas fa-play"></i>&nbsp;Start
-          </button>
-          <button type="button" id="speechRecognitionStop">
-            <i class="fas fa-stop"></i>&nbsp;Stop
-          </button>
-        </div>
-      </section>
-    </section>
-
-    <!-- End of caption section -->
 
     <!-- Start my settings -->
 
@@ -455,9 +413,9 @@ Please allow camera and microphone for it's full functionality.
 
         <div id="tabStyling" class="tabcontent">
           <br />
-          <label for="videolifyTheme">Theme color</label>
+          <label for="KABALITheme">Theme color</label>
           <br />
-          <select id="videolifyTheme">
+          <select id="KABALITheme">
             <option value="neon">🟣 Neon</option>
             <option value="dark">⚫️ Dark</option>
             <option value="forest">🟢 Forest</option>
@@ -501,94 +459,6 @@ Please allow camera and microphone for it's full functionality.
     </section>
 
     <!-- End my settings -->
-
-    <!-- Start whiteboard -->
-
-    <section id="whiteboard" class="hidden">
-      <header id="whiteboardHeader" class="whiteboard-header">
-        <div id="whiteboardTitle" class="whiteboard-header-title">
-          <button id="whiteboardCloseBtn" class="fas fa-times"></button>
-        </div>
-        <div class="whiteboard-header-options">
-          <button
-            id="whiteboardGhostButton"
-            class="fas fa-circle-half-stroke"
-          ></button>
-          <input
-            id="wbBackgroundColorEl"
-            class="whiteboardColorPicker"
-            type="color"
-            value="#FFF"
-          />
-          <input
-            id="wbDrawingColorEl"
-            class="whiteboardColorPicker"
-            type="color"
-            value="#000"
-          />
-          <button id="whiteboardPencilBtn" class="fas fa-pencil-alt"></button>
-          <button
-            id="whiteboardObjectBtn"
-            class="fas fa-mouse-pointer"
-          ></button>
-          <button id="whiteboardUndoBtn" class="fas fa-undo"></button>
-          <button id="whiteboardRedoBtn" class="fas fa-redo"></button>
-          <button id="whiteboardImgFileBtn" class="fas fa-image"></button>
-          <button id="whiteboardImgUrlBtn" class="fas fa-link"></button>
-          <button id="whiteboardTextBtn" class="fas fa-spell-check"></button>
-          <button id="whiteboardLineBtn" class="fas fa-slash"></button>
-          <button id="whiteboardRectBtn" class="fas fa-square"></button>
-          <button id="whiteboardTriangleBtn">
-            <svg
-              viewBox="0 0 512 512"
-              width="1em"
-              height="1em"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              fill="#ffffff"
-              stroke="#ffffff"
-            >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <title>triangle-filled</title>
-                <g
-                  id="Page-1"
-                  stroke="none"
-                  stroke-width="1"
-                  fill="none"
-                  fill-rule="evenodd"
-                >
-                  <g
-                    id="drop"
-                    fill="#ffffff"
-                    transform="translate(32.000000, 42.666667)"
-                  >
-                    <path
-                      d="M246.312928,5.62892705 C252.927596,9.40873724 258.409564,14.8907053 262.189374,21.5053731 L444.667042,340.84129 C456.358134,361.300701 449.250007,387.363834 428.790595,399.054926 C422.34376,402.738832 415.04715,404.676552 407.622001,404.676552 L42.6666667,404.676552 C19.1025173,404.676552 7.10542736e-15,385.574034 7.10542736e-15,362.009885 C7.10542736e-15,354.584736 1.93772021,347.288125 5.62162594,340.84129 L188.099293,21.5053731 C199.790385,1.04596203 225.853517,-6.06216498 246.312928,5.62892705 Z"
-                      id="Combined-Shape"
-                    ></path>
-                  </g>
-                </g>
-              </g>
-            </svg>
-          </button>
-          <button id="whiteboardCircleBtn" class="fas fa-circle"></button>
-          <button id="whiteboardSaveBtn" class="fas fa-save"></button>
-          <button id="whiteboardEraserBtn" class="fas fa-eraser"></button>
-          <button id="whiteboardCleanBtn" class="fas fa-trash"></button>
-        </div>
-      </header>
-      <main>
-        <canvas id="wbCanvas"></canvas>
-      </main>
-    </section>
-
-    <!-- End whiteboard -->
 
     <!-- Start File Send -->
 

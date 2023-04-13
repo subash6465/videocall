@@ -40,12 +40,6 @@ h1 {
   margin: 0.67em 0;
 }
 
-figcaption,
-figure,
-main {
-  display: block;
-}
-
 figure {
   margin: 1em 40px;
 }
@@ -393,9 +387,6 @@ figure {
   margin: 48px 0;
 }
 
-figcaption {
-  padding: 8px 0;
-}
 
 table {
   font-size: 16px;
@@ -528,11 +519,6 @@ small,
 }
 
 .text-xxs {
-  font-size: 14px;
-  line-height: 22px;
-}
-
-figcaption {
   font-size: 14px;
   line-height: 22px;
 }
