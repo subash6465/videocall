@@ -64,7 +64,7 @@ function resizeVideoMedia() {
   let Height = videoMediaContainer.offsetHeight - Margin * 2;
   let Cameras = getEcN("Camera");
   let max = 0;
-  let optional = isHideMeActive ? 1 : 0;
+  let optional = 0;
   let isOneVideoElement =
     videoMediaContainer.childElementCount - optional == 1 ? true : false;
 

@@ -75,8 +75,6 @@ const chatInputEmoji = {
 const className = {
   user: "fas fa-user",
   clock: "fas fa-clock",
-  hideMeOn: "fas fa-user-slash",
-  hideMeOff: "fas fa-user",
   audioOn: "fas fa-microphone",
   audioOff: "fas fa-microphone-slash",
   videoOn: "fas fa-video",
@@ -131,7 +129,6 @@ const buttons = {
     showTabRoomParticipants: true,
     showTabRoomSecurity: true,
     showMuteEveryoneBtn: true,
-    showHideEveryoneBtn: true,
     showEjectEveryoneBtn: true,
     showLockRoomBtn: true,
     showUnlockRoomBtn: true,
@@ -162,8 +159,6 @@ const userLimitsActive = false; // Limit users per room
 const usersCountLimit = 2; // Limit 2 users per room if userLimitsActive true
 
 const useAvatarApi = true; // if false the cam-Off avatar = avatarImg
-
-let isHideMeActive = false; // Hide myself from the meeting view
 
 let notifyBySound = true; // turn on - off sound notifications
 
@@ -272,7 +267,6 @@ let initSpeakerSelect;
 // buttons bar
 let buttonsBar;
 let shareRoomBtn;
-let hideMeBtn;
 let audioBtn;
 let videoBtn;
 let swapCameraBtn;
@@ -344,7 +338,6 @@ let mediaRecorder;
 let recordedBlobs;
 // room actions btns
 let muteEveryoneBtn;
-let hideEveryoneBtn;
 let ejectEveryoneBtn;
 let lockRoomBtn;
 let unlockRoomBtn;
@@ -365,7 +358,6 @@ let sendInProgress = false;
 let receiveFileDiv;
 let receiveFileInfo;
 let receiveProgress;
-let receiveHideBtn;
 let receiveFilePercentage;
 let receiveInProgress = false;
 // MTU 1kb to prevent drop.
@@ -402,7 +394,6 @@ function getHtmlElementsById() {
   // buttons Bar
   buttonsBar = getId("buttonsBar");
   shareRoomBtn = getId("shareRoomBtn");
-  hideMeBtn = getId("hideMeBtn");
   audioBtn = getId("audioBtn");
   videoBtn = getId("videoBtn");
   swapCameraBtn = getId("swapCameraBtn");
@@ -466,7 +457,6 @@ function getHtmlElementsById() {
   myAudioStatusIcon = getId("myAudioStatusIcon");
   // room actions buttons
   muteEveryoneBtn = getId("muteEveryoneBtn");
-  hideEveryoneBtn = getId("hideEveryoneBtn");
   ejectEveryoneBtn = getId("ejectEveryoneBtn");
   lockRoomBtn = getId("lockRoomBtn");
   unlockRoomBtn = getId("unlockRoomBtn");
@@ -479,7 +469,6 @@ function getHtmlElementsById() {
   receiveFileDiv = getId("receiveFileDiv");
   receiveFileInfo = getId("receiveFileInfo");
   receiveProgress = getId("receiveProgress");
-  receiveHideBtn = getId("receiveHideBtn");
   receiveFilePercentage = getId("receiveFilePercentage");
   // video url player
   videoUrlCont = getId("videoUrlCont");
@@ -505,7 +494,6 @@ function setButtonsToolTip() {
   if (isMobileDevice) return;
   // main buttons
   setTippy(shareRoomBtn, "Invite people to join", "right-start");
-  setTippy(hideMeBtn, "Hide me", "right-start");
   setTippy(audioBtn, "Pause the audio", "right-start");
   setTippy(videoBtn, "Pause the video", "right-start");
   setTippy(fullScreenBtn, "View full screen", "right-start");
@@ -548,7 +536,6 @@ function setButtonsToolTip() {
   // setTippy(ejectEveryoneBtn, 'Eject everyone except yourself', 'top');
   // Suspend/Hide File transfer btn
   setTippy(sendAbortBtn, "Abort file transfer", "right-start");
-  setTippy(receiveHideBtn, "Hide file transfer", "right-start");
   // video URL player
   setTippy(videoUrlCloseBtn, "Close video player", "right-start");
   setTippy(videoAudioCloseBtn, "Close video player", "right-start");
@@ -918,7 +905,6 @@ function handleButtonsRule() {
   elemDisplay(msgerCPBtn, buttons.chat.showParticipantsBtn);
   // Settings
   elemDisplay(muteEveryoneBtn, buttons.settings.showMuteEveryoneBtn);
-  elemDisplay(hideEveryoneBtn, buttons.settings.showHideEveryoneBtn);
   elemDisplay(ejectEveryoneBtn, buttons.settings.showEjectEveryoneBtn);
   elemDisplay(lockRoomBtn, buttons.settings.showLockRoomBtn);
   elemDisplay(unlockRoomBtn, buttons.settings.showUnlockRoomBtn);
@@ -1979,7 +1965,6 @@ async function loadLocalMedia(stream) {
   const myPrivacyBtn = document.createElement("button");
   const myVideoStatusIcon = document.createElement("button");
   const myAudioStatusIcon = document.createElement("button");
-  const myVideoFullScreenBtn = document.createElement("button");
   const myVideoPinBtn = document.createElement("button");
   const myVideoZoomInBtn = document.createElement("button");
   const myVideoZoomOutBtn = document.createElement("button");
@@ -2010,10 +1995,6 @@ async function loadLocalMedia(stream) {
   myVideoToImgBtn.setAttribute("id", "myVideoToImgBtn");
   myVideoToImgBtn.className = className.snapShot;
 
-  // my video full screen mode
-  myVideoFullScreenBtn.setAttribute("id", "myVideoFullScreenBtn");
-  myVideoFullScreenBtn.className = className.fullScreen;
-
   // my video zoomIn/Out
   myVideoZoomInBtn.setAttribute("id", "myVideoZoomInBtn");
   myVideoZoomInBtn.className = className.zoomIn;
@@ -2031,7 +2012,6 @@ async function loadLocalMedia(stream) {
   setTippy(myVideoStatusIcon, "My video is on", "bottom");
   setTippy(myAudioStatusIcon, "You're unmuted", "bottom");
   setTippy(myVideoToImgBtn, "Take a snapshot", "bottom");
-  setTippy(myVideoFullScreenBtn, "Full screen mode", "bottom");
   setTippy(myVideoZoomInBtn, "Zoom-in video", "bottom");
   setTippy(myVideoZoomOutBtn, "Zoom-out video", "bottom");
   setTippy(myVideoPinBtn, "Toggle Pin video", "bottom");
@@ -2060,10 +2040,6 @@ async function loadLocalMedia(stream) {
   if (buttons.local.showZoomInOutBtn) {
     myVideoNavBar.appendChild(myVideoZoomInBtn);
     myVideoNavBar.appendChild(myVideoZoomOutBtn);
-  }
-
-  if (isVideoFullScreenSupported) {
-    myVideoNavBar.appendChild(myVideoFullScreenBtn);
   }
   if (buttons.local.showSnapShotBtn) {
     myVideoNavBar.appendChild(myVideoToImgBtn);
@@ -2110,10 +2086,6 @@ async function loadLocalMedia(stream) {
   setupMySettings();
   setupVideoUrlPlayer();
   startCountTime();
-
-  if (isVideoFullScreenSupported) {
-    handleVideoPlayerFs(myLocalMedia.id, myVideoFullScreenBtn.id);
-  }
 
   handleFileDragAndDrop(myLocalMedia.id, myPeerId, true);
 
@@ -2244,10 +2216,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
   remoteVideoZoomOutBtn.setAttribute("id", peer_id + "videoZoomOut");
   remoteVideoZoomOutBtn.className = className.zoomOut;
 
-  // remote video full screen mode
-  remoteVideoFullScreenBtn.setAttribute("id", peer_id + "_fullScreen");
-  remoteVideoFullScreenBtn.className = className.fullScreen;
-
   // remote video pin/unpin button
   remoteVideoPinBtn.setAttribute("id", peer_id + "_pinUnpin");
   remoteVideoPinBtn.className = className.pinUnpin;
@@ -2261,7 +2229,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
   setTippy(remotePrivateMsgBtn, "Send a DM", "bottom");
   setTippy(remoteVideoToImgBtn, "Take a snapshot", "bottom");
   setTippy(remotePeerKickOut, "Kick out", "bottom");
-  setTippy(remoteVideoFullScreenBtn, "Full screen mode", "bottom");
   setTippy(remoteVideoZoomInBtn, "Zoom-in video", "bottom");
   setTippy(remoteVideoZoomOutBtn, "Zoom-out video", "bottom");
   setTippy(remoteVideoPinBtn, "Pin video", "bottom");
@@ -2379,11 +2346,6 @@ async function loadRemoteMediaStream(stream, peers, peer_id) {
   // pin video on screen share detected
   if (peer_video_status && peer_screen_status) {
     getId(remoteVideoPinBtn.id).click();
-  }
-
-  if (isVideoFullScreenSupported) {
-    // handle video full screen mode
-    handleVideoPlayerFs(remoteMedia.id, remoteVideoFullScreenBtn.id, peer_id);
   }
 
   if (buttons.remote.showKickOutBtn) {
@@ -3059,9 +3021,7 @@ function refreshMyVideoAudioStatus(localMediaStream) {
  */
 function manageLeftButtons() {
   setShareRoomBtn();
-  setHideMeButton();
   setAudioBtn();
-  setVideoBtn();
   setSwapCameraBtn();
   setFullScreenBtn();
   setChatRoomBtn();
@@ -3077,16 +3037,6 @@ function manageLeftButtons() {
 function setShareRoomBtn() {
   shareRoomBtn.addEventListener("click", async (e) => {
     shareRoomUrl();
-  });
-}
-
-/**
- * Hide myself from room view
- */
-function setHideMeButton() {
-  hideMeBtn.addEventListener("click", (e) => {
-    isHideMeActive = !isHideMeActive;
-    handleHideMe(isHideMeActive);
   });
 }
 
@@ -3116,15 +3066,6 @@ function setAudioBtn() {
       console.log("Push-to-talk: audio OFF");
     }
   };
-}
-
-/**
- * Video hide - show button click event
- */
-function setVideoBtn() {
-  videoBtn.addEventListener("click", (e) => {
-    handleVideo(e, false);
-  });
 }
 
 /**
@@ -3519,9 +3460,6 @@ function setupMySettings() {
   // room actions
   muteEveryoneBtn.addEventListener("click", (e) => {
     disableAllPeers("audio");
-  });
-  hideEveryoneBtn.addEventListener("click", (e) => {
-    disableAllPeers("video");
   });
   ejectEveryoneBtn.addEventListener("click", (e) => {
     ejectEveryone();
@@ -5212,25 +5150,6 @@ async function emitPeerStatus(element, status) {
 }
 
 /**
- * Handle hide myself from room view
- * @param {boolean} isHideMeActive
- */
-function handleHideMe(isHideMeActive) {
-  const myVideoWrap = getId("myVideoWrap");
-  const myVideoPinBtn = getId("myVideoPinBtn");
-  if (isHideMeActive && isVideoPinned) myVideoPinBtn.click();
-  myVideoWrap.style.display = isHideMeActive ? "none" : "inline-block";
-  hideMeBtn.className = isHideMeActive
-    ? className.hideMeOn
-    : className.hideMeOff;
-  hideMeBtn.style.color = isHideMeActive ? "red" : "black";
-  isHideMeActive ? playSound("off") : playSound("on");
-  if (Object.keys(peerConnections).length === 1) {
-    resizeVideoMedia();
-  }
-}
-
-/**
  * Set My Audio Status Icon and Title
  * @param {boolean} status of my audio
  */
@@ -5357,19 +5276,6 @@ function handlePeerAudioBtn(peer_id) {
   peerAudioBtn.onclick = () => {
     if (peerAudioBtn.className === className.audioOn)
       disablePeer(peer_id, "audio");
-  };
-}
-
-/**
- * Hide Video to specified peer in the room
- * @param {string} peer_id socket.id
- */
-function handlePeerVideoBtn(peer_id) {
-  if (!useVideo || !buttons.remote.videoBtnClickAllowed) return;
-  let peerVideoBtn = getId(peer_id + "_videoStatus");
-  peerVideoBtn.onclick = () => {
-    if (peerVideoBtn.className === className.videoOn)
-      disablePeer(peer_id, "video");
   };
 }
 
@@ -5520,9 +5426,6 @@ function handlePeerAction(config) {
     case "muteAudio":
       setMyAudioOff(peer_name);
       break;
-    case "hideVideo":
-      setMyVideoOff(peer_name);
-      break;
     case "screenStart":
       handleScreenStart(peer_id);
       break;
@@ -5632,51 +5535,6 @@ function setMyVideoOff(peer_name) {
 }
 
 /**
- * Mute or Hide everyone except yourself
- * @param {string} element type audio/video
- */
-function disableAllPeers(element) {
-  if (!thereIsPeerConnections()) {
-    return userLog("info", "No participants detected");
-  }
-  Swal.fire({
-    background: swalBackground,
-    position: "center",
-    imageUrl: element == "audio" ? audioOffImg : camOffImg,
-    title:
-      element == "audio"
-        ? "Mute everyone except yourself?"
-        : "Hide everyone except yourself?",
-    text:
-      element == "audio"
-        ? "Once muted, you won't be able to unmute them, but they can unmute themselves at any time."
-        : "Once hided, you won't be able to unhide them, but they can unhide themselves at any time.",
-    showDenyButton: true,
-    confirmButtonText: element == "audio" ? `Mute` : `Hide`,
-    denyButtonText: `Cancel`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      switch (element) {
-        case "audio":
-          userLog("toast", "Mute everyone 👍");
-          emitPeersAction("muteAudio");
-          break;
-        case "video":
-          userLog("toast", "Hide everyone 👍");
-          emitPeersAction("hideVideo");
-          break;
-      }
-    }
-  });
-}
-
-/**
  * Eject all participants in the room expect yourself
  */
 function ejectEveryone() {
@@ -5701,50 +5559,6 @@ function ejectEveryone() {
   }).then((result) => {
     if (result.isConfirmed) {
       emitPeersAction("ejectAll");
-    }
-  });
-}
-
-/**
- * Mute or Hide specific peer
- * @param {string} peer_id socket.id
- * @param {string} element type audio/video
- */
-function disablePeer(peer_id, element) {
-  if (!thereIsPeerConnections()) {
-    return userLog("info", "No participants detected");
-  }
-  Swal.fire({
-    background: swalBackground,
-    position: "center",
-    imageUrl: element == "audio" ? audioOffImg : camOffImg,
-    title:
-      element == "audio" ? "Mute this participant?" : "Hide this participant?",
-    text:
-      element == "audio"
-        ? "Once muted, you won't be able to unmute them, but they can unmute themselves at any time."
-        : "Once hided, you won't be able to unhide them, but they can unhide themselves at any time.",
-    showDenyButton: true,
-    confirmButtonText: element == "audio" ? `Mute` : `Hide`,
-    denyButtonText: `Cancel`,
-    showClass: {
-      popup: "animate__animated animate__fadeInDown",
-    },
-    hideClass: {
-      popup: "animate__animated animate__fadeOutUp",
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      switch (element) {
-        case "audio":
-          userLog("toast", "Mute audio 👍");
-          emitPeerAction(peer_id, "muteAudio");
-          break;
-        case "video":
-          userLog("toast", "Hide video 👍");
-          emitPeerAction(peer_id, "hideVideo");
-          break;
-      }
     }
   });
 }
@@ -6054,13 +5868,6 @@ function handleFileAbort() {
   receiveFileDiv.style.display = "none";
   console.log("File transfer aborted");
   userLog("toast", "⚠️ File transfer aborted");
-}
-
-/**
- * Hide incoming file transfer
- */
-function hideFileTransfer() {
-  receiveFileDiv.style.display = "none";
 }
 
 /**
